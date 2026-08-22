@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="RB Calendar - Multi-country, multi-calendar (Gregorian, Bangla, Hijri) app with holidays. By Rafsan. Works online & offline.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/logo.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="assets/logo.jpg">
+  <title>RB Calendar - By Rafsan</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Side Menu -->
+    <aside id="sideMenu" class="side-menu">
+      <div class="menu-header">
+        <img src="assets/logo.jpg" alt="RB Logo" class="menu-logo">
+        <div>
+          <h1>RB</h1>
+          <p class="by-rafsan">By Rafsan</p>
+        </div>
+      </div>
+      <nav class="menu-nav">
+        <button class="menu-item active" data-view="month" data-i18n="month">Month</button>
+        <button class="menu-item" data-view="week" data-i18n="week">Week</button>
+        <button class="menu-item" data-view="day" data-i18n="day">Day</button>
+        <button class="menu-item" data-view="year" data-i18n="year">Year</button>
+        <button class="menu-item" data-view="schedule" data-i18n="schedule">Schedule</button>
+        <button class="menu-item" data-view="holidays" data-i18n="holidaysChart">Holidays Chart</button>
+      </nav>
+      <div class="menu-section">
+        <label data-i18n="country">Country</label>
+        <div class="search-box">
+          <input type="text" id="countrySearch" placeholder="Search country..." data-i18n-placeholder="searchCountry">
+          <ul id="countryList" class="country-list"></ul>
+        </div>
+        <p id="selectedCountry" class="selected-country">Bangladesh</p>
+      </div>
+      <div class="menu-section">
+        <label data-i18n="language">Language</label>
+        <select id="langSelect">
+          <option value="en">English</option>
+          <option value="bn">বাংলা (Bangla)</option>
+          <option value="ar">العربية (Arabic)</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="zh">中文 (Chinese)</option>
+          <option value="ja">日本語 (Japanese)</option>
+          <option value="de">Deutsch</option>
+          <option value="pt">Português</option>
+          <option value="ru">Русский</option>
+        </select>
+      </div>
+      <div class="menu-footer">
+        <button id="refreshBtn" class="menu-item" data-i18n="refresh">Refresh</button>
+        <p class="version">v1.0 • 2014–2060</p>
+        <p class="offline-badge" id="offlineBadge">Online</p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main">
+      <header class="top-bar">
+        <button id="menuToggle" class="icon-btn" aria-label="Menu">☰</button>
+        <div class="month-nav">
+          <button id="prevMonth" class="icon-btn">‹</button>
+          <h2 id="currentMonthYear">August 2026</h2>
+          <button id="nextMonth" class="icon-btn">›</button>
+        </div>
+        <div class="top-actions">
+          <button id="todayBtn" class="today-btn" data-i18n="today">Today</button>
+          <select id="yearSelect" class="year-select"></select>
+          <img src="assets/logo.jpg" alt="RB" class="header-logo">
+        </div>
+      </header>
+
+      <div id="calendarContainer" class="calendar-container">
+        <!-- Calendar grid rendered by JS -->
+      </div>
+
+      <div id="holidaysPanel" class="holidays-panel hidden">
+        <h3 data-i18n="annualHolidays">Annual Holidays</h3>
+        <div id="holidaysChart"></div>
+      </div>
+
+      <div id="dayDetail" class="day-detail hidden">
+        <button id="closeDetail" class="close-btn">×</button>
+        <h3 id="detailDate"></h3>
+        <div id="detailBangla" class="detail-line"></div>
+        <div id="detailHijri" class="detail-line"></div>
+        <div id="detailHolidays"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/calendars.js"></script>
+  <script src="js/holidays.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(() => console.log('SW registered')).catch(e => console.log('SW failed', e));
+    }
+  </script>
+</body>
+</html>
