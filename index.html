@@ -1,112 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="description" content="RB Calendar - Multi-country, multi-calendar (Gregorian, Bangla, Hijri) app with holidays. By Rafsan. Works online & offline.">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="assets/logo.jpg" type="image/jpeg">
-  <link rel="apple-touch-icon" href="assets/logo.jpg">
-  <title>RB Calendar - By Rafsan</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Globewatch — live world operations deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060B12;
+    --panel:#0D1620;
+    --panel-raised:#101B27;
+    --grid-line:#1A2C3B;
+    --text:#E7EEF3;
+    --text-muted:#7E93A3;
+    --flight:#F2C14E;
+    --ship:#4FD1C5;
+    --population:#9B8CF2;
+    --low:#4FD17A;
+    --mod:#F2A65A;
+    --high:#E2574C;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-display);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .app{
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+
+  /* ---------- topbar ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 20px;
+    border-bottom:1px solid var(--grid-line);
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:18px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    white-space:nowrap;
+  }
+  .brand-mark{
+    display:inline-block;
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--low);
+    box-shadow:0 0 0 3px rgba(79,209,122,0.18);
+  }
+  .tabs{
+    display:flex;
+    gap:4px;
+    background:var(--panel);
+    padding:4px;
+    border-radius:8px;
+    border:1px solid var(--grid-line);
+  }
+  .tab{
+    font-family:var(--font-display);
+    font-size:13px;
+    font-weight:500;
+    color:var(--text-muted);
+    background:transparent;
+    border:none;
+    padding:7px 13px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:color .15s ease, background .15s ease;
+  }
+  .tab:hover{ color:var(--text); }
+  .tab.active{
+    color:var(--bg);
+    background:var(--text);
+  }
+  .clock{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--text-muted);
+    white-space:nowrap;
+  }
+  .clock b{ color:var(--text); font-weight:500; }
+
+  /* ---------- deck ---------- */
+  .deck{
+    flex:1;
+    display:grid;
+    grid-template-columns:340px 1fr;
+    gap:1px;
+    background:var(--grid-line);
+    min-height:0;
+  }
+  @media (max-width: 860px){
+    .deck{ grid-template-columns:1fr; }
+  }
+
+  .panel{
+    background:var(--panel);
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+
+  .list-panel{
+    padding:16px 16px 4px;
+    overflow-y:auto;
+    max-height:calc(100vh - 190px);
+  }
+  .list-heading{
+    font-size:12px;
+    color:var(--text-muted);
+    margin:0 0 10px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--grid-line);
+  }
+  .list-heading b{ color:var(--text); font-weight:600; }
+
+  .row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--grid-line);
+  }
+  .row:last-child{ border-bottom:none; }
+  .row-main{ min-width:0; }
+  .row-id{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--text);
+    display:block;
+  }
+  .row-sub{
+    font-size:12px;
+    color:var(--text-muted);
+    margin-top:2px;
+  }
+  .row-metric{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-muted);
+    text-align:right;
+    white-space:nowrap;
+  }
+  .dot{
+    display:inline-block;
+    width:7px; height:7px;
+    border-radius:50%;
+    margin-right:7px;
+    flex-shrink:0;
+  }
+
+  .bar-track{
+    width:100%;
+    height:5px;
+    border-radius:3px;
+    background:var(--grid-line);
+    overflow:hidden;
+    margin-top:6px;
+  }
+  .bar-fill{ height:100%; border-radius:3px; }
+
+  .count-up{
+    font-family:var(--font-mono);
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* ---------- map ---------- */
+  .map-panel{
+    position:relative;
+    padding:16px;
+  }
+  .map-frame{
+    position:relative;
+    flex:1;
+    border-radius:10px;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(79,209,197,0.05), transparent 55%),
+      var(--panel-raised);
+    border:1px solid var(--grid-line);
+  }
+  .sweep{
+    position:absolute;
+    inset:-20%;
+    background:conic-gradient(from 0deg, rgba(255,255,255,0.05), transparent 25%);
+    animation:sweep 14s linear infinite;
+    mix-blend-mode:screen;
+    pointer-events:none;
+  }
+  @keyframes sweep{ to{ transform:rotate(360deg); } }
+
+  svg#mapSvg{ display:block; width:100%; height:100%; position:relative; }
+  .graticule{ stroke:var(--grid-line); stroke-width:1; }
+  .route-flight{ fill:none; stroke:var(--flight); stroke-width:1; opacity:0.35; }
+  .route-ship{ fill:none; stroke:var(--ship); stroke-width:1; opacity:0.35; stroke-dasharray:2 3; }
+  .marker-flight{ fill:var(--flight); }
+  .marker-ship{ fill:var(--ship); }
+  .node{ transition:r .25s ease, fill .25s ease; }
+  .node-label{
+    font-family:var(--font-mono);
+    font-size:8.5px;
+    fill:var(--text-muted);
+  }
+
+  .map-caption{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 2px 0;
+    font-size:12px;
+    color:var(--text-muted);
+    flex-wrap:wrap;
+  }
+  .legend{ display:flex; gap:16px; flex-wrap:wrap; }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .legend .dot{ margin-right:0; }
+
+  /* ---------- footer ticker ---------- */
+  .ticker{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    padding:12px 20px;
+    border-top:1px solid var(--grid-line);
+    background:var(--panel);
+    overflow:hidden;
+  }
+  .ticker-world{
+    flex-shrink:0;
+    padding-right:22px;
+    border-right:1px solid var(--grid-line);
+  }
+  .ticker-label{
+    display:block;
+    font-size:11px;
+    color:var(--text-muted);
+    margin-bottom:3px;
+  }
+  .ticker-value{
+    font-family:var(--font-mono);
+    font-size:17px;
+    font-weight:500;
+    color:var(--population);
+  }
+  .ticker-scroll{
+    display:flex;
+    gap:26px;
+    overflow:hidden;
+    white-space:nowrap;
+    mask-image:linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+  }
+  .ticker-track{
+    display:flex;
+    gap:26px;
+    animation:marquee 34s linear infinite;
+  }
+  @keyframes marquee{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  .ticker-item{
+    font-size:12px;
+    color:var(--text-muted);
+    display:flex;
+    align-items:baseline;
+    gap:7px;
+  }
+  .ticker-item b{
+    font-family:var(--font-mono);
+    color:var(--text);
+    font-weight:500;
+  }
+
+  .note{
+    padding:8px 20px 10px;
+    font-size:11px;
+    color:var(--text-muted);
+    background:var(--bg);
+  }
+</style>
 </head>
 <body>
-  <div id="app">
-    <!-- Side Menu -->
-    <aside id="sideMenu" class="side-menu">
-      <div class="menu-header">
-        <img src="assets/logo.jpg" alt="RB Logo" class="menu-logo">
-        <div>
-          <h1>RB</h1>
-          <p class="by-rafsan">By Rafsan</p>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark"></span>Globewatch</div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="flights">Flights</button>
+      <button class="tab" data-tab="ships">Ships</button>
+      <button class="tab" data-tab="traffic">Road traffic</button>
+      <button class="tab" data-tab="population">Population</button>
+    </nav>
+    <div class="clock">UTC <b id="clock">--:--:--</b></div>
+  </header>
+
+  <main class="deck">
+    <aside class="panel list-panel" id="listPanel"></aside>
+
+    <section class="panel map-panel">
+      <div class="map-frame">
+        <div class="sweep"></div>
+        <svg id="mapSvg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="map-caption">
+        <div class="legend">
+          <span><span class="dot" style="background:var(--flight)"></span>Flights</span>
+          <span><span class="dot" style="background:var(--ship)"></span>Ships</span>
+          <span id="mapCaptionText">18 stations · simulated live positions</span>
         </div>
       </div>
-      <nav class="menu-nav">
-        <button class="menu-item active" data-view="month" data-i18n="month">Month</button>
-        <button class="menu-item" data-view="week" data-i18n="week">Week</button>
-        <button class="menu-item" data-view="day" data-i18n="day">Day</button>
-        <button class="menu-item" data-view="year" data-i18n="year">Year</button>
-        <button class="menu-item" data-view="schedule" data-i18n="schedule">Schedule</button>
-        <button class="menu-item" data-view="holidays" data-i18n="holidaysChart">Holidays Chart</button>
-      </nav>
-      <div class="menu-section">
-        <label data-i18n="country">Country</label>
-        <div class="search-box">
-          <input type="text" id="countrySearch" placeholder="Search country..." data-i18n-placeholder="searchCountry">
-          <ul id="countryList" class="country-list"></ul>
-        </div>
-        <p id="selectedCountry" class="selected-country">Bangladesh</p>
-      </div>
-      <div class="menu-section">
-        <label data-i18n="language">Language</label>
-        <select id="langSelect">
-          <option value="en">English</option>
-          <option value="bn">বাংলা (Bangla)</option>
-          <option value="ar">العربية (Arabic)</option>
-          <option value="hi">हिन्दी (Hindi)</option>
-          <option value="es">Español</option>
-          <option value="fr">Français</option>
-          <option value="zh">中文 (Chinese)</option>
-          <option value="ja">日本語 (Japanese)</option>
-          <option value="de">Deutsch</option>
-          <option value="pt">Português</option>
-          <option value="ru">Русский</option>
-        </select>
-      </div>
-      <div class="menu-footer">
-        <button id="refreshBtn" class="menu-item" data-i18n="refresh">Refresh</button>
-        <p class="version">v1.0 • 2014–2060</p>
-        <p class="offline-badge" id="offlineBadge">Online</p>
-      </div>
-    </aside>
+    </section>
+  </main>
 
-    <!-- Main Content -->
-    <main id="main">
-      <header class="top-bar">
-        <button id="menuToggle" class="icon-btn" aria-label="Menu">☰</button>
-        <div class="month-nav">
-          <button id="prevMonth" class="icon-btn">‹</button>
-          <h2 id="currentMonthYear">August 2026</h2>
-          <button id="nextMonth" class="icon-btn">›</button>
-        </div>
-        <div class="top-actions">
-          <button id="todayBtn" class="today-btn" data-i18n="today">Today</button>
-          <select id="yearSelect" class="year-select"></select>
-          <img src="assets/logo.jpg" alt="RB" class="header-logo">
-        </div>
-      </header>
+  <footer class="ticker">
+    <div class="ticker-world">
+      <span class="ticker-label">World population (est.)</span>
+      <span class="ticker-value count-up" id="worldPop">–</span>
+    </div>
+    <div class="ticker-scroll">
+      <div class="ticker-track" id="popTrack"></div>
+    </div>
+  </footer>
 
-      <div id="calendarContainer" class="calendar-container">
-        <!-- Calendar grid rendered by JS -->
-      </div>
+  <div class="note">Simulated demo data — flight, ship, traffic and per-second population figures are illustrative, not a live feed.</div>
+</div>
 
-      <div id="holidaysPanel" class="holidays-panel hidden">
-        <h3 data-i18n="annualHolidays">Annual Holidays</h3>
-        <div id="holidaysChart"></div>
-      </div>
-
-      <div id="dayDetail" class="day-detail hidden">
-        <button id="closeDetail" class="close-btn">×</button>
-        <h3 id="detailDate"></h3>
-        <div id="detailBangla" class="detail-line"></div>
-        <div id="detailHijri" class="detail-line"></div>
-        <div id="detailHolidays"></div>
-      </div>
-    </main>
-  </div>
-
-  <script src="js/i18n.js"></script>
-  <script src="js/calendars.js"></script>
-  <script src="js/holidays.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').then(() => console.log('SW registered')).catch(e => console.log('SW failed', e));
-    }
-  </script>
+<script src="data.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
