@@ -1,72 +1,58 @@
-# RB Calendar
+# Globewatch
 
-**By Rafsan**
+A single-page "world operations deck" that brings flights, ships, road traffic
+and population onto one live-feeling dashboard.
 
-A beautiful, modern multi-country calendar Progressive Web App (PWA) with support for **Gregorian**, **Bangla (Bengali)**, and **Hijri (Arabic)** dates.
+**[Live data note]** This is a front-end demo built with static/mock data —
+there is no backend and no real API calls. It's meant as a working starting
+point / UI reference, not a production tracker.
 
-## Features
+## What's inside
 
-- **Time range**: 2014 – 2060 (select any year)
-- **Views**: Month (primary), Year overview, Holidays Chart, and placeholders for Week / Day / Schedule
-- **Bangladesh special**: Shows English + Bangla + Hijri dates together on every day (like traditional wall calendars)
-- **Other countries**: Clean Gregorian view with local holidays
-- **Country selector** with search (Bangladesh, USA, India, UK, Saudi Arabia, UAE, Pakistan, Canada, Australia, Japan and more can be added)
-- **11 languages**: English (main) + বাংলা, العربية, हिन्दी, Español, Français, 中文, 日本語, Deutsch, Português, Русский  
-  UI text changes with language; app name "RB" stays in English.
-- **Annual Holidays Chart**: Easy-to-read list of public holidays for the selected country & year
-- **Works Offline**: Installable as PWA on mobile and desktop. Service Worker caches core files.
-- **Beautiful dark theme** with soft gradients and moon-inspired logo
-- **Auto “Today”** based on device local time
-- Ready for GitHub Pages or any static host
+- **Flights** — a mock list of routes with altitude and speed, animated along
+  arcs on the map.
+- **Ships** — a mock list of vessels, flags and cargo, animated along shipping
+  lanes.
+- **Road traffic** — congestion levels for a handful of major cities, shown as
+  bars and as colored map nodes.
+- **Population** — per-country population figures that count up/down in real
+  time based on illustrative growth-rate estimates, plus a world-total ticker.
 
-## Logo
+## Running it
 
-Crescent moon with “RB” and “By Rafsan” underneath.
+No build step — it's plain HTML/CSS/JS.
 
-## How to Use / Install
+```bash
+# just open it directly
+open index.html
 
-### Online (any browser)
-1. Open `index.html` or host the folder.
-2. Select country from the side menu.
-3. Change language if desired.
-4. Navigate months/years. Tap a day for details.
-
-### Install as App (PWA)
-- **Android / Chrome**: Open the site → menu → “Add to Home screen” / “Install app”
-- **iOS Safari**: Share → “Add to Home Screen”
-- **Desktop Chrome/Edge**: Install icon in address bar
-
-Once installed it works offline for core calendar functions.
-
-## Project Structure
-
-```
-RB-Calendar/
-├── index.html
-├── manifest.json
-├── sw.js                 # Service Worker for offline
-├── css/styles.css
-├── js/
-│   ├── app.js            # Main logic
-│   ├── calendars.js      # Bangla & Hijri conversion
-│   ├── holidays.js       # Holiday data (extendable)
-│   └── i18n.js           # Translations
-├── assets/logo.jpg
-└── README.md
+# or serve it locally (recommended, avoids browser file:// quirks)
+python3 -m http.server 8000
+# then visit http://localhost:8000
 ```
 
-## Extending Holidays
+## Files
 
-Edit `js/holidays.js`. Add more years under `years` or more countries.  
-Moon-dependent Islamic holidays are approximate; for production you can add an online refresh when the device is online.
+- `index.html` — markup + all styling
+- `data.js` — the mock dataset (cities, flights, ships, traffic, population)
+- `app.js` — map rendering, tab switching, live counters
 
-## Bangla & Hijri Accuracy
+## Wiring in real data
 
-- **Bangla**: Uses the revised Bangladesh calendar rules (Boishakh ≈ 14 April). Good for display purposes 2014–2060.
-- **Hijri**: Tabular/arithmetic approximation. Actual religious dates may vary by ±1 day depending on moon sighting. Suitable for general calendar use.
+To turn this into a real tracker you'd swap `data.js` for live calls to:
+
+- **Flights** — [Flightradar24](https://www.flightradar24.com/) or
+  [FlightAware](https://www.flightaware.com/) APIs
+- **Ships** — [MarineTraffic](https://www.marinetraffic.com/) or
+  [VesselFinder](https://www.vesselfinder.com/) APIs
+- **Road traffic** — Google Maps / Waze traffic APIs
+- **Population** — [World Bank](https://data.worldbank.org/) or
+  [UN Population Division](https://population.un.org/) open data
+
+Each of those has its own rate limits, auth, and (for flights/ships) usually a
+paid tier for real-time data, so plan for a small backend/proxy to hold API
+keys rather than calling them from the browser.
 
 ## License
 
-Free to use, modify, and share. Created for educational and personal use.
-
-**RB Calendar • By Rafsan • 2026**
+MIT — do whatever you like with it.
